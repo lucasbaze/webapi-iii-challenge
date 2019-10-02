@@ -3,6 +3,7 @@ const express = require('express');
 
 //Routes
 const userRoutes = require('./users/userRouter');
+const postRoutes = require('./posts/postRouter');
 
 //middleware
 const morgan = require('morgan');
@@ -26,6 +27,7 @@ server.get('/', (req, res) => {
 });
 
 server.use('/users', userRoutes);
+server.use('/posts', postRoutes);
 
 const PORT = 8080;
 server.listen(PORT, () => `App runnning on PORT: ${PORT}`);
