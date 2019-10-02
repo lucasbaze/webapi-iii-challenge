@@ -62,7 +62,21 @@ async function validateUserId(req, res, next) {
     next();
 }
 
-function validateUser(req, res, next) {}
+function validateUser(req, res, next) {
+    let user = req.body;
+
+    if (!user) {
+        res.status(400).json({ message: 'Missing Body' });
+        return;
+    }
+
+    if (!user.name) {
+        res.status(400).json({ message: 'Missing Name' });
+        return;
+    }
+
+    next();
+}
 
 function validatePost(req, res, next) {}
 
