@@ -29,5 +29,12 @@ server.get('/', (req, res) => {
 server.use('/users', userRoutes);
 server.use('/posts', postRoutes);
 
+function errorMiddleware(err, req, res, next) {
+    res.send(err);
+}
+
+//error handling
+server.use(errorMiddleware);
+
 const PORT = 8080;
 server.listen(PORT, () => `App runnning on PORT: ${PORT}`);
