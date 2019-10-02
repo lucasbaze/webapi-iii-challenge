@@ -20,17 +20,9 @@ router.get('/', async (req, res) => {
 
 //
 //Get specific User
-router.get('/:id', async (req, res) => {
-    let { id } = req.params;
-    let user = await db.getById(id);
-    console.log('User: ', user);
-    if (!user || user == null) {
-        res.status(400).json({
-            error: 'No user exists with that ID',
-        });
-        return;
-    }
-    res.status(200).json({ user: user });
+router.get('/:id', validateUserId, (req, res) => {
+    console.log('Request Header User: ', req.user);
+    res.status(200).json({ user: req.user });
 });
 
 //
@@ -58,7 +50,17 @@ router.put('/:id', (req, res) => {});
 
 //custom middleware
 
-function validateUserId(req, res, next) {}
+async function validateUserId(req, res, next) {
+    let { id } = req.params;
+    let user = await db.getById(id);
+    if (!user || user == null) {
+        res.status(400).json({ error: 'No user with that ID exists' });
+        return;
+    }
+    console.log('Validated User: ', user);
+    req.user = user;
+    next();
+}
 
 function validateUser(req, res, next) {}
 
