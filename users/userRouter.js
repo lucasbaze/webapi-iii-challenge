@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const db = require('./userDb');
-const postDB = require('../posts/postDb');
 
 //
 //Create New User
@@ -82,7 +81,19 @@ router.delete('/:id', validateUserId, async (req, res) => {
 
 //
 // Update User
-router.put('/:id', validateUser, (req, res) => {});
+router.put('/:id', validateUser, async (req, res) => {
+    let { id } = req.params;
+    let user = req.body;
+    let createUser = await db.update(id, user);
+    if (!createdUser || createdUser == null) {
+        res.status(500).json({ error: 'Error in creating the user' });
+        return;
+    }
+    res.status(200).json({
+        success: 'Succesfully updated user',
+        user: createdUser,
+    });
+});
 
 //custom middleware
 
