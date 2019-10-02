@@ -34,7 +34,12 @@ function errorMiddleware(err, req, res, next) {
 }
 
 //error handling
-server.use(errorMiddleware);
+server.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).json({
+        message: 'There was an error performing the operation',
+    });
+});
 
 const PORT = 8080;
 server.listen(PORT, () => `App runnning on PORT: ${PORT}`);

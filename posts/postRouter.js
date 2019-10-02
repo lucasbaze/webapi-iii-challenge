@@ -38,9 +38,8 @@ async function validatePostId(req, res, next) {
     let { id } = req.params;
     let post = await db.getById(id);
     if (!post || post == null) {
-        //throw new Error('Post does not exist');
-        //next(err);
-        res.status(400).json({ error: 'Post does not exist' });
+        next(new Error('Post does not exist'));
+        //res.status(400).json({ error: 'Post does not exist' });
     }
     req.post = post;
     next();
