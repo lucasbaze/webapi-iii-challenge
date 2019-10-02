@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const db = require('./userDb');
 
-router.post('/', (req, res) => {});
+router.post('/', validateUser, (req, res) => {});
 
-router.post('/:id/posts', (req, res) => {});
+router.post('/:id/posts', validatePost, (req, res) => {});
 
 //
 //Get All Users
@@ -27,7 +27,7 @@ router.get('/:id', validateUserId, (req, res) => {
 
 //
 //Get user posts
-router.get('/:id/posts', async (req, res) => {
+router.get('/:id/posts', validateUserId, async (req, res) => {
     let { id } = req.params;
     let posts = await db.getUserPosts(id);
     console.log('Posts: ', posts);
@@ -42,11 +42,17 @@ router.get('/:id/posts', async (req, res) => {
 
 //
 //Delete User
-router.delete('/:id', (req, res) => {});
+router.delete('/:id', validateUserId, async (req, res) => {
+    let { id } = req.params;
+    let deleted = await db.remove(id);
+    if (deleted) {
+        res.status(200).json({ success: 'User successfully deleted' });
+    }
+});
 
 //
 // Update User
-router.put('/:id', (req, res) => {});
+router.put('/:id', validateUser, (req, res) => {});
 
 //custom middleware
 
@@ -78,6 +84,21 @@ function validateUser(req, res, next) {
     next();
 }
 
-function validatePost(req, res, next) {}
+function validatePost(req, res, next) {
+    let { id } = req.params;
+    let post = req.body;
+
+    if (!post) {
+        res.status(400).json({ message: 'missing post data' });
+        return;
+    }
+
+    if (!post.text) {
+        res.status(400).json({ message: 'missing required text field' });
+        return;
+    }
+
+    next();
+}
 
 module.exports = router;
