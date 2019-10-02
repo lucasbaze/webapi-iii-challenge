@@ -84,7 +84,7 @@ router.delete('/:id', validateUserId, async (req, res) => {
 router.put('/:id', validateUser, async (req, res) => {
     let { id } = req.params;
     let user = req.body;
-    let createUser = await db.update(id, user);
+    let createdUser = await db.update(id, user);
     if (!createdUser || createdUser == null) {
         res.status(500).json({ error: 'Error in creating the user' });
         return;
