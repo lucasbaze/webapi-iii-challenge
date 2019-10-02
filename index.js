@@ -1,10 +1,15 @@
 // code away!
 const express = require('express');
+
+//Routes
+const userRoutes = require('./users/userRouter');
+
+//middleware
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
 
-//middleware
+//custom middleware
 const logger = require('./middleware/logger');
 
 const server = express();
@@ -12,16 +17,15 @@ const server = express();
 server.use(express.json());
 server.use(helmet());
 server.use(cors());
-
+//server.use(morgan('dev'));
 server.use(logger);
 
-//server.use(morgan('dev'));
-
 server.get('/', (req, res) => {
+    console.log(req.headers);
     res.json({ content: 'Hello World' });
 });
 
-// server.use('/api/route', apiRoutes);
+server.use('/users', userRoutes);
 
 const PORT = 8080;
 server.listen(PORT, () => `App runnning on PORT: ${PORT}`);
