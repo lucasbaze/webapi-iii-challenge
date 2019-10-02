@@ -1,9 +1,39 @@
 const router = require('express').Router();
 const db = require('./userDb');
+const postDB = require('../posts/postDb');
 
-router.post('/', validateUser, (req, res) => {});
+//
+//Create New User
+router.post('/', validateUser, async (req, res) => {
+    let user = req.body;
+    let createdUser = await db.insert(user);
+    console.log(createdUser);
+    if (!createdUser || createdUser.id == null) {
+        res.status(500).json({ error: 'There was an error saving the user' });
+    }
+    res.status(200).json({
+        success: 'successfully created new user',
+        user: createdUser,
+    });
+});
 
-router.post('/:id/posts', validatePost, (req, res) => {});
+//
+//Create new user post
+router.post('/:id/posts', validatePost, async (req, res) => {
+    let post = req.body;
+    let { id } = req.params;
+    let createdPost = await postDB.insert({
+        ...post,
+        user_id: id,
+    });
+    if (!createdPost || createdPost == null) {
+        res.status(500).json({ error: 'There was an error adding the post' });
+    }
+    res.status(200).json({
+        success: 'Successfully saved post',
+        post: createdPost,
+    });
+});
 
 //
 //Get All Users
