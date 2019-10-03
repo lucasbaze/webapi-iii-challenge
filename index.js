@@ -42,5 +42,5 @@ server.use((err, req, res, next) => {
     });
 });
 
-const PORT = 8080;
+const PORT = process.env.PORT;
 server.listen(PORT, () => `App runnning on PORT: ${PORT}`);
